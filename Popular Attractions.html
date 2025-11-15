@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Attractions - Travel NZ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF',
+                        secondary: '#059669',
+                        'north-red': '#FF6B6B',
+                        'south-blue': '#4ECDC4'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-text {
+                background: linear-gradient(135deg, #1E40AF, #059669);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .btn-north {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        }
+        
+        .btn-south {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        }
+        
+        .region-tab {
+            transition: all 0.3s ease;
+        }
+        
+        .region-tab.active {
+            transform: scale(1.05);
+        }
+        
+        .region-content {
+            display: none;
+        }
+        
+        .region-content.active {
+            display: block;
+        }
+        
+        .attraction-card {
+            transition: all 0.3s ease;
+        }
+        
+        .attraction-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-placeholder {
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            border: 2px dashed #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .image-placeholder:hover {
+            background: linear-gradient(45deg, #e5e7eb, #d1d5db);
+            border-color: #9ca3af;
+        }
+        
+        .image-placeholder i {
+            color: #9ca3af;
+            font-size: 48px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+
+
+        
+        .close-modal:hover {
+            color: #ff0000;
+        }
+        
+        /* Animation classes */
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50">
+    <p>这是布局 P 标签的内容</p>
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <i class="fa fa-paper-plane text-white text-lg"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">Travel NZ</span>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                <a href="Home.html">Home</a> <a href="Popular Attractions.html">Popular Attractions</a> <a href="Contact Us.html">Contact Us</a> </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-6 space-y-4">
+                <a href="Home.html" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Home</a>
+                <a href="Popular Attractions.html" class="block text-primary font-medium">Popular Attractions</a>
+                <a href="Contact Us.html" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Title Section -->
+    <section class="relative pt-24 pb-16 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 section-fade-in">
+                Popular Attractions
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto section-fade-in">
+                Explore amazing destinations across both islands
+            </p>
+        </div>
+    </section>
+
+    <!-- New Zealand Introduction -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 section-fade-in">
+                        Explore Pristine New Zealand
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed section-fade-in">
+                        New Zealand consists of two main islands, North and South, and boasts the purest natural environment and richest tourism resources in the world. From the geothermal wonders and Maori culture of the North Island to the magnificent mountains and fjords of the South Island, every place is breathtaking. Whether you enjoy adventure sports, cultural experiences, or natural scenery, New Zealand can meet your expectations.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 section-fade-in">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2">12+</div>
+                            <div class="text-gray-600">Major Cities</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2">150+</div>
+                            <div class="text-gray-600">Tourist Attractions</div>
+                        </div>
+                    </div>
+                </div>
+                <img src="新西兰.jpg" width="1000" height="1000" alt="New Zealand Landscape" class="w-full h-auto rounded-2xl shadow-lg"/>            </div>
+        </div>
+    </section>
+
+    <!-- North/South Island Toggle -->
+    <section id="destination-section" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 section-fade-in">
+                    Choose Your Destination
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto section-fade-in">
+                    Click the buttons below to explore attractions in the North or South Island
+                </p>
+            </div>
+            
+            <!-- Region Toggle Buttons -->
+            <div class="flex justify-center space-x-6 mb-12">
+                <button onclick="showRegion('north')" id="north-tab" class="region-tab active bg-white px-8 py-4 rounded-full shadow-lg font-semibold text-gray-900 border-2 border-north-red">
+                    <i class="fa fa-thermometer-half text-north-red mr-3"></i>
+                    North Island
+                </button>
+                <button onclick="showRegion('south')" id="south-tab" class="region-tab bg-white px-8 py-4 rounded-full shadow-lg font-semibold text-gray-900 border-2 border-south-blue">
+                    <i class="fa fa-snowflake-o text-south-blue mr-3"></i>
+                    South Island
+                </button>
+            </div>
+            
+            <!-- North Island Content -->
+            <div id="north-content" class="region-content active">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-4">
+                        <i class="fa fa-thermometer-half text-north-red mr-3"></i>
+                        New Zealand North Island
+                    </h3>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        The North Island is New Zealand's political, economic, and cultural center, boasting rich Maori cultural heritage, active volcanic geothermal activity, and modern urban facilities.
+                    </p>
+                </div>
+                
+                <!-- North Island Attractions Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Auckland -->
+                    <div id="auckland" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('auckland')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="奥克兰.jpeg" alt="Auckland Skyline" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Auckland</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                New Zealand's largest city, known as the "City of Sails," featuring beautiful harbors and volcanic landscapes.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.8</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('auckland'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rotorua -->
+                    <div id="rotorua" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('rotorua')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="罗托鲁瓦.jpeg" alt="Rotorua Geothermal Area" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Rotorua</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Famous geothermal tourist city with active geothermal activities, hot springs, and Maori culture.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.9</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('rotorua'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wellington -->
+                    <div id="wellington" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('wellington')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="惠灵顿.jpeg" alt="Wellington City" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Wellington</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                New Zealand's capital city, known as the "coolest little capital in the world."
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.7</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('wellington'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hamilton -->
+                    <div id="hamilton" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('hamilton')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="汉密尔顿.jpeg" alt="Hamilton Gardens" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Hamilton</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Known as the "Garden City," featuring beautiful botanical gardens and parks.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.6</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('hamilton'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Taupo -->
+                    <div id="taupo" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('taupo')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="陶波.jpeg" alt="Lake Taupo" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Taupo</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Located on the shores of Lake Taupo, famous for fishing and geothermal activities.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.8</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('taupo'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bay of Islands -->
+                    <div id="bay-of-islands" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('bay-of-islands')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="岛屿湾.jpg" alt="Bay of Islands" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Bay of Islands</h3>
+                                <span class="bg-north-red text-white px-2 py-1 rounded text-xs font-medium">North Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                A beautiful bay area consisting of 144 islands, ideal for sailing and diving.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.9</span>
+                                </div>
+                                <button class="btn-north text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('bay-of-islands'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- North Island Travel Tips -->
+                <div class="mt-16 bg-white rounded-2xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+                        <i class="fa fa-lightbulb-o text-north-red mr-3"></i>
+                        North Island Travel Tips
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-north-red to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-calendar text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Best Time to Visit</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                The North Island has a mild climate year-round. The best times to visit are spring (September-November) and autumn (March-May).
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-north-red to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-plane text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Transportation</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                Auckland International Airport has direct flights connecting to major Chinese cities. Domestic transportation is convenient with buses, trains, and ferries.
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-north-red to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-users text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Cultural Experiences</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                Don't miss Maori cultural performances and traditional hangi feasts to gain insight into New Zealand's culture.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- South Island Content -->
+            <div id="south-content" class="region-content">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-4">
+                        <i class="fa fa-snowflake-o text-south-blue mr-3"></i>
+                        New Zealand South Island
+                    </h3>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        The South Island is renowned worldwide for its magnificent natural scenery, from the majestic Southern Alps to serene lakes, from spectacular fjords to golden beaches.
+                    </p>
+                </div>
+                
+                <!-- South Island Attractions Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Queenstown -->
+                    <div id="queenstown" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('queenstown')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="皇后镇.jpg" alt="Queenstown Landscape" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Queenstown</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                The adventure capital of the world, offering bungee jumping, skydiving, skiing, and other extreme sports.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.9</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('queenstown'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Milford Sound -->
+                    <div id="milford-sound" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('milford-sound')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="米尔福德峡湾.jpg" alt="Milford Sound Fjord" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Milford Sound</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                The eighth wonder of the world, the spectacular fjord scenery is breathtaking.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">5.0</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('milford-sound'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Christchurch -->
+                    <div id="christchurch" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('christchurch')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="基督城.jpeg" alt="Christchurch City" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Christchurch</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                The largest city in the South Island, known as the "Garden City" with beautiful parks and gardens.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.7</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('christchurch'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nelson -->
+                    <div id="nelson" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('nelson')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="纳尔逊.jpeg" alt="Nelson City" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Nelson</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Known for its sunny climate, beautiful beaches, and vibrant arts scene.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.6</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('nelson'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kaikoura -->
+                    <div id="kaikoura" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('kaikoura')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="凯库拉.jpeg" alt="Kaikoura Coast" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Kaikoura</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Famous for whale watching and delicious seafood, especially crayfish.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.8</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('kaikoura'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tekapo -->
+                    <div id="tekapo" class="attraction-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="openAttractionModal('tekapo')">
+                        <div class="h-48 overflow-hidden">
+                            <img src="蒂卡波.png" alt="Lake Tekapo" class="w-full h-full object-cover"/>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-gray-900">Tekapo</h3>
+                                <span class="bg-south-blue text-white px-2 py-1 rounded text-xs font-medium">South Island</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Famous for its stunning turquoise lake and the Church of the Good Shepherd.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span class="text-gray-600 ml-2 text-sm">4.9</span>
+                                </div>
+                                <button class="btn-south text-white px-4 py-2 rounded-lg text-sm hover:scale-105 transition-transform duration-300" onclick="openAttractionModal('tekapo'); event.stopPropagation()">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- South Island Travel Tips -->
+                <div class="mt-16 bg-white rounded-2xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+                        <i class="fa fa-lightbulb-o text-south-blue mr-3"></i>
+                        South Island Travel Tips
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-south-blue to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-car text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Self-Drive Tours</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                The South Island is perfect for self-drive tours. Renting a car gives you the freedom to explore at your own pace.
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-south-blue to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-snowflake-o text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Seasonal Considerations</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                Winter (June-August) offers excellent skiing, while summer (December-February) is perfect for hiking and water activities.
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-south-blue to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa fa-camera text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Photography Opportunities</h4>
+                            <p class="text-gray-600 leading-relaxed">
+                                Bring plenty of memory cards! The South Island offers endless photography opportunities with its stunning landscapes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fa fa-paper-plane text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold">Travel NZ</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Professional New Zealand travel service provider, creating unforgettable pure journeys for you.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+              <div>
+                <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+                  <ul class="space-y-3">
+                      <li><a href="Home.html">Home</a></li>
+                      <li><a href="Popular Attractions.html">Popular Attractions</a></li>
+                      <li><a href="Contact Us.html">Contact Us</a></li>
+                  </ul>
+                </div>
+                
+                <!-- Popular Destinations -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Popular Destinations</h4>
+                    <ul class="space-y-3">
+                        <li><a href="Popular Attractions.html?island=north&attraction=auckland" class="text-gray-400 hover:text-white transition-colors duration-300">Auckland</a></li>
+                        <li><a href="Popular Attractions.html?island=south&attraction=queenstown" class="text-gray-400 hover:text-white transition-colors duration-300">Queenstown</a></li>
+                        <li><a href="Popular Attractions.html?island=north&attraction=rotorua" class="text-gray-400 hover:text-white transition-colors duration-300">Rotorua</a></li>
+                        <li><a href="Popular Attractions.html?island=south&attraction=milford-sound" class="text-gray-400 hover:text-white transition-colors duration-300">Milford Sound</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Contact Us</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-3"></i>
+                            info@travelnz.com
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone mr-3"></i>
+                            +86 400-888-8888
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-clock-o mr-3"></i>
+                            9:00-18:00 (Weekdays)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Travel NZ. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Attraction Modal -->
+    <div id="attraction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-gradient-to-br from-primary to-secondary text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 opacity-0 pointer-events-none">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 获取URL参数
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                island: params.get('island'),
+                attraction: params.get('attraction')
+            };
+        }
+
+        // 自动切换到指定区域并滚动到指定景点
+        function autoSwitchToRegion() {
+            const params = getUrlParams();
+            
+            if (params.island === 'south') {
+                // 切换到南岛
+                showRegion('south');
+                
+                // 如果有指定景点，滚动到该景点
+                if (params.attraction) {
+                    setTimeout(() => {
+                        const element = document.getElementById(params.attraction);
+                        if (element) {
+                            element.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            
+                            // 添加高亮效果
+                            element.style.transition = 'all 0.5s ease';
+                            element.style.boxShadow = '0 0 0 3px rgba(78, 205, 196, 0.5)';
+                            setTimeout(() => {
+                                element.style.boxShadow = '';
+                            }, 2000);
+                        }
+                    }, 300);
+                }
+            } else if (params.island === 'north' && params.attraction) {
+                // 如果有指定景点，滚动到该景点（北岛是默认显示的）
+                setTimeout(() => {
+                    const element = document.getElementById(params.attraction);
+                    if (element) {
+                        element.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                        
+                        // 添加高亮效果
+                        element.style.transition = 'all 0.5s ease';
+                        element.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.5)';
+                        setTimeout(() => {
+                            element.style.boxShadow = '';
+                        }, 2000);
+                    }
+                }, 300);
+            }
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Region toggle functionality - 修改后的版本
+        function showRegion(region) {
+            // 保存当前位置
+            const currentScrollY = window.scrollY;
+            
+            // Hide all content
+            document.querySelectorAll('.region-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.region-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(region + '-content').classList.add('active');
+            
+            // Add active class to selected tab
+            document.getElementById(region + '-tab').classList.add('active');
+            
+            // 恢复滚动位置
+            window.scrollTo({
+                top: currentScrollY,
+                behavior: 'auto'
+            });
+        }
+
+        // Attraction data - 添加详情图片
+        const attractions = {
+            auckland: {
+                name: 'Auckland',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '奥克兰.jpeg',
+                description: 'Auckland is New Zealand\'s largest city, located on the North Island. Known as the "City of Sails," it is surrounded by two magnificent harbors and features over 50 volcanic cones. The city offers a perfect blend of urban sophistication and natural beauty.',
+                highlights: [
+                    'Sky Tower - The tallest building in the Southern Hemisphere, offering 360-degree views of the city',
+                    'Devonport - A historic waterfront town with beautiful beaches and Victorian architecture',
+                    'Auckland Museum - Learn about New Zealand\'s history, culture, and natural history',
+                    'Hauraki Gulf - Home to over 50 islands, a paradise for sailing and water sports',
+                    'One Tree Hill - A volcanic cone with panoramic views of Auckland'
+                ],
+                bestTime: 'Year-round, best during spring (September-November) and autumn (March-May)',
+                transportation: 'Auckland International Airport has direct flights to major Chinese cities.The city boasts convenient transportation, with buses, trains, and ferries available',
+                accommodation: 'From luxury hotels to budget hostels, various accommodation options are available',
+                tips: 'It is recommended to stay for at least 2-3 days to experience city sightseeing and nearby attractions'
+            },
+            rotorua: {
+                name: 'Rotorua',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '罗托鲁瓦.jpeg',
+                description: 'Rotorua is New Zealand\'s most famous geothermal tourist city, renowned for its active geothermal activities, hot springs, and Maori culture. The geothermal landscape includes geysers, hot springs, mud pools, and geothermal vents.',
+                highlights: [
+                    'Maori Cultural Village - Experience traditional Maori culture and performances',
+                    'Geothermal Parks - Witness geysers and geothermal wonders',
+                    'Hot Spring Resorts - Enjoy natural hot spring therapy',
+                    'Redwood Forest - A paradise for hiking and mountain biking',
+                    'Lake Fishing - Fishing in crystal clear lakes'
+                ],
+                bestTime: 'Year-round, spring and autumn have the most pleasant climate',
+                transportation: 'Approximately 3 hours drive from Auckland, with frequent bus and tour services',
+                accommodation: 'Various grades of hotels and holiday homes, with hot spring hotels being a specialty',
+                tips: 'Remember to bring sunglasses and sunscreen as UV radiation is strong in geothermal areas'
+            },
+            wellington: {
+                name: 'Wellington',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '惠灵顿.jpeg',
+                description: 'Wellington is New Zealand\'s capital, located at the southern tip of the North Island. This vibrant city boasts a rich cultural arts scene, museums, and delicacy. Despite its reputation for strong winds, this doesn\'t diminish its charm.',
+                highlights: [
+                    'Te Papa Tongarewa - New Zealand\'s National Museum',
+                    'Parliament Buildings - Unique architectural design',
+                    'Wellington Cable Car - Overlooking the city scenery',
+                    'Oriental Bay - Beautiful urban beach',
+                    'Weta Workshop - Learn about New Zealand\'s film industry'
+                ],
+                bestTime: 'Autumn (March-May) has mild climate, making it the best time to visit',
+                transportation: 'Wellington International Airport has direct flights, and you can also take trains or buses from Auckland',
+                accommodation: 'Various types of accommodation, from boutique hotels to backpacker hostels',
+                tips: 'Wellington is windy, so it\'s advisable to bring a windproof jacket'
+            },
+            hamilton: {
+                name: 'Hamilton',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '汉密尔顿.jpeg',
+                description: 'Hamilton is the fourth largest city in New Zealand\'s North Island, known as the "Garden City." This city features beautiful botanical gardens, parks, and gardens, making it a great place to live and visit.',
+                highlights: [
+                    'Hamilton Gardens - A beautiful 58-hectare botanical garden',
+                    'Waitomo Glowworm Caves - World-famous underground cave wonders',
+                    'Lake Hamilton - A beautiful lake in the city center',
+                    'Hamilton Zoo - Home to a rich variety of animals',
+                    'Arts Post - Showcasing local art and history'
+                ],
+                bestTime: 'Spring (September-November) and autumn (March-May) have pleasant climates',
+                transportation: 'Approximately 1.5 hours drive from Auckland, with frequent bus services',
+                accommodation: 'Various types of accommodation, from business hotels to family guesthouses',
+                tips: 'Recommended as an accommodation base for visiting the Waitomo Glowworm Caves'
+            },
+            taupo: {
+                name: 'Taupo',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '陶波.jpeg',
+                description: 'Taupo is located in the central North Island, situated on the shores of Lake Taupo, New Zealand\'s largest lake. Taupo is a popular holiday town known for fishing, water sports, and geothermal activities.',
+                highlights: [
+                    'Lake Taupo - New Zealand\'s largest lake',
+                    'Huka Falls - Spectacular waterfall views',
+                    'Geothermal Parks - Witness geothermal activities',
+                    'Helicopter Tours - Overlooking lakes and volcanic landscapes',
+                    'Fishing Experiences - World-class rainbow trout fishing'
+                ],
+                bestTime: 'Summer (December-February) is suitable for water sports, winter (June-August) is quieter',
+                transportation: 'Approximately 1 hour drive from Rotorua, with bus connections to major cities',
+                accommodation: 'Lakefront resorts and boutique hotels',
+                tips: 'Fishing requires a license, which can be purchased locally'
+            },
+            'bay-of-islands': {
+                name: 'Bay of Islands',
+                region: 'North Island',
+                regionColor: 'north-red',
+                image: '岛屿湾.jpg',
+                description: 'The Bay of Islands is located at the northernmost tip of New Zealand\'s North Island, consisting of 144 islands. This beautiful bay area has clear blue waters, making it an ideal location for sailing, diving, and bird watching.',
+                highlights: [
+                    'Paihia - The main tourist center of the Bay of Islands',
+                    'Russell - New Zealand\'s first capital',
+                    'Hole in the Rock - A natural rock archway',
+                    'Dolphin Watching - Swimming with wild dolphins',
+                    'Deep Sea Fishing - Experience deep sea fishing Fun'
+                ],
+                bestTime: 'Summer (December-February) is warm and pleasant, making it the best tourist season',
+                transportation: 'Approximately 3 hours drive from Auckland, with long-distance bus services',
+                accommodation: 'Waterfront resorts and boutique hotels',
+                tips: 'Suggest arranging 2-3 days to fully experience the island\'s charm'
+            },
+            queenstown: {
+                name: 'Queenstown',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '皇后镇.jpg',
+                description: 'Queenstown is located on the shores of Lake Wakatipu, surrounded by the Southern Alps. Known as the adventure capital of the world, it is home to the world\'s first commercial bungee jump and various extreme sports.',
+                highlights: [
+                    'Kawarau Bridge Bungy - The world\'s first commercial bungee jump',
+                    'Skyline Gondola - Overlooking Queenstown and the Southern Alps',
+                    'TSS Earnslaw Steamship - Experience vintage lake transportation',
+                    'Remarkables Ski Area - World-class ski resort',
+                    'Shotover Jet - Thrilling jet boat ride through narrow canyons'
+                ],
+                bestTime: 'Summer (December-February) for hiking and water sports, winter (June-August) for skiing',
+                transportation: 'Queenstown Airport has direct flights from major New Zealand cities',
+                accommodation: 'Luxury resorts, boutique hotels, and ski lodges',
+                tips: 'Adventure activities require booking in advance during peak seasons'
+            },
+            'milford-sound': {
+                name: 'Milford Sound',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '米尔福德峡湾.jpg',
+                description: 'Milford Sound is a fjord located in Fiordland National Park on the southwest coast of New Zealand\'s South Island. Described by Rudyard Kipling as the "Eighth Wonder of the World," it is one of New Zealand\'s most famous tourist destinations.',
+                highlights: [
+                    'Mitre Peak - Iconic mountain peak rising directly from the sea',
+                    'Stirling Falls - Beautiful waterfall cascading into the sound',
+                    'Bowen Falls - The first waterfall you see when entering the sound',
+                    'Wildlife Spotting - Dolphins, seals, and penguins',
+                    'Scenic Cruises - The best way to experience the fjord'
+                ],
+                bestTime: 'Year-round, but the weather can be unpredictable. Rain creates more waterfalls',
+                transportation: 'Accessed via the scenic Milford Road (State Highway 94)',
+                accommodation: 'Limited accommodation in Milford Sound itself, most visitors stay in Te Anau',
+                tips: 'The drive to Milford Sound is as spectacular as the destination itself'
+            },
+            christchurch: {
+                name: 'Christchurch',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '基督城.jpeg',
+                description: 'Christchurch is the largest city in the South Island of New Zealand and the country\'s third-most populous urban area. Known as the "Garden City," it is famous for its beautiful parks, gardens, and English heritage.',
+                highlights: [
+                    'Botanic Gardens - 30 hectares of beautiful gardens in the city center',
+                    'Avon River - Scenic river with punting tours',
+                    'Christchurch Cathedral - Historic cathedral (under restoration)',
+                    'International Antarctic Centre - Interactive museum about Antarctica',
+                    'Port Hills - Offers panoramic views of the city and coastline'
+                ],
+                bestTime: 'Spring (September-November) when the gardens are in full bloom',
+                transportation: 'Christchurch International Airport is the main gateway to the South Island',
+                accommodation: 'Wide range of hotels, motels, and serviced apartments',
+                tips: 'The city is still recovering from earthquakes, but has many new attractions'
+            },
+            nelson: {
+                name: 'Nelson',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '纳尔逊.jpeg',
+                description: 'Nelson is a city on the eastern shores of Tasman Bay in the upper South Island of New Zealand. Known for its sunny climate, beautiful beaches, and vibrant arts scene, Nelson is a popular tourist destination.',
+                highlights: [
+                    'Abel Tasman National Park - Beautiful coastal national park',
+                    'Nelson Lakes National Park - Pristine lakes and mountain scenery',
+                    'World of WearableArt & Classic Cars Museum - Unique museum',
+                    'Tahunanui Beach - Popular urban beach',
+                    'Founders Heritage Park - Living history museum'
+                ],
+                bestTime: 'Summer (December-February) for beach activities, spring for wildflowers',
+                transportation: 'Nelson Airport has flights from major New Zealand cities',
+                accommodation: 'Boutique hotels, holiday parks, and bed & breakfasts',
+                tips: 'Nelson is known for its craft beer and local wines'
+            },
+            kaikoura: {
+                name: 'Kaikoura',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '凯库拉.jpeg',
+                description: 'Kaikoura is a town on the east coast of the South Island of New Zealand. It is famous for its marine life, including sperm whales, dolphins, and seals, making it one of the best places in the world for whale watching.',
+                highlights: [
+                    'Whale Watching - Daily tours to see sperm whales',
+                    'Swim with Dolphins - Interactive dolphin encounters',
+                    'Seal Colony - View wild fur seals',
+                    'Kaikoura Peninsula Walkway - Scenic coastal walk',
+                    'Fresh Seafood - Famous for crayfish (lobster)'
+                ],
+                bestTime: 'Year-round, whale watching is possible in all seasons',
+                transportation: 'Located on State Highway 1, 2.5 hours north of Christchurch',
+                accommodation: 'Oceanfront lodges, motels, and backpacker hostels',
+                tips: 'Book whale watching tours in advance, especially during peak season'
+            },
+            tekapo: {
+                name: 'Tekapo',
+                region: 'South Island',
+                regionColor: 'south-blue',
+                image: '蒂卡波.png',
+                description: 'Lake Tekapo is a small town located in the Mackenzie Basin in the South Island of New Zealand. It is famous for its stunning turquoise lake, the Church of the Good Shepherd, and its status as a Dark Sky Reserve.',
+                highlights: [
+                    'Lake Tekapo - Turquoise glacial lake',
+                    'Church of the Good Shepherd - Iconic stone church with lake views',
+                    'Aoraki/Mount Cook - New Zealand\'s highest mountain (day trip)',
+                    'Aurora Australis - Southern Lights viewing (winter)',
+                    'Stargazing - Dark Sky Reserve for astronomy'
+                ],
+                bestTime: 'Summer (December-February) for lake activities, winter for stargazing',
+                transportation: '3 hours drive from Christchurch, 2 hours from Queenstown',
+                accommodation: 'Lakefront hotels, holiday homes, and campgrounds',
+                tips: 'Bring warm clothing even in summer, as temperatures can drop at night'
+            }
+        };
+
+        // Open attraction modal
+        function openAttractionModal(attractionId) {
+            const attraction = attractions[attractionId];
+            const modal = document.getElementById('attraction-modal');
+            const modalBody = document.getElementById('modal-body');
+            
+            if (!attraction) return;
+            
+            modalBody.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">${attraction.name}</h2>
+                        <div class="flex items-center mb-6">
+                            <span class="bg-${attraction.regionColor} text-white px-3 py-1 rounded-full text-sm font-medium">${attraction.region}</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Description</h3>
+                            <p class="text-gray-600 leading-relaxed">${attraction.description}</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Highlights</h3>
+                            <ul class="space-y-2">
+                                ${attraction.highlights.map(highlight => `
+                                    <li class="flex items-start">
+                                        <i class="fa fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                        <span class="text-gray-600">${highlight}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="h-64 overflow-hidden rounded-lg mb-6">
+                            <img src="${attraction.image}" alt="${attraction.name}" class="w-full h-full object-cover">
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">
+                                    <i class="fa fa-calendar text-${attraction.regionColor} mr-2"></i>
+                                    Best Time to Visit
+                                </h3>
+                                <p class="text-gray-600">${attraction.bestTime}</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">
+                                    <i class="fa fa-plane text-${attraction.regionColor} mr-2"></i>
+                                    Transportation
+                                </h3>
+                                <p class="text-gray-600">${attraction.transportation}</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">
+                                    <i class="fa fa-bed text-${attraction.regionColor} mr-2"></i>
+                                    Accommodation
+                                </h3>
+                                <p class="text-gray-600">${attraction.accommodation}</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">
+                                    <i class="fa fa-lightbulb-o text-${attraction.regionColor} mr-2"></i>
+                                    Travel Tips
+                                </h3>
+                                <p class="text-gray-600">${attraction.tips}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Close modal
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('attraction-modal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('attraction-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('back-to-top');
+            
+            if (window.scrollY > 100) {
+                navbar.classList.add('nav-blur');
+                backToTop.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                navbar.classList.remove('nav-blur');
+                backToTop.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // Back to top functionality
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.1s';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with section-fade-in class
+        document.querySelectorAll('.section-fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 在页面加载完成后自动切换
+        document.addEventListener('DOMContentLoaded', function() {
+            // 原有的动画代码...
+            
+            // 新增：自动切换到URL参数指定的区域
+            autoSwitchToRegion();
+            
+            // 原有的其他代码...
+        });
+    </script>
+</body>
+</html>

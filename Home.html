@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel NZ - Official New Zealand Tourism Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF',
+                        secondary: '#059669',
+                        'nz-blue': '#003366',
+                        'nz-green': '#008000'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-text {
+                background: linear-gradient(135deg, #1E40AF, #059669);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* Map styles */
+        .nz-map {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .map-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #1E40AF, #059669);
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            z-index: 10;
+        }
+        
+        .map-point:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.5);
+        }
+        
+        .map-point.north {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        }
+        
+        .map-point.south {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        }
+        
+        .map-tooltip {
+            position: absolute;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+        
+        .map-point:hover .map-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Animation effects */
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 幻灯片样式 */
+        .slideshow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+
+
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .thumbnails {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .thumbnail {
+            width: 120px; /* 增大了缩略图尺寸 */
+            height: 90px; /* 增大了缩略图尺寸 */
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s, transform 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .thumbnail.active, .thumbnail:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            border-color: white;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            width: 100%;
+            z-index: 10;
+        }
+        
+        .progress {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 2s linear; /* 改为2秒 */
+        }
+        
+        .progress-bar.active .progress {
+            width: 100%;
+        }
+        
+        /* 内容区域调整 - 使用绝对定位 */
+.hero-content {
+    position: absolute;
+    top: 25%;   /* 垂直位置：调整这个值 (15%-40%) */
+    left: 8%;   /* 水平位置：调整这个值 (5%-20%) */
+    z-index: 10;
+    text-align: left;
+    max-width: 45%;
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        max-width: 90%;
+        left: 5%;
+        top: 20%;
+        text-align: center;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem !important;
+    }
+    
+    .thumbnail {
+        width: 80px; /* 移动端缩略图尺寸 */
+        height: 60px; /* 移动端缩略图尺寸 */
+    }
+}
+
+/* 标题背景增强可读性 */
+.hero-content h1, .hero-content p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.hero-content h1::after, .hero-content p::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    right: -10px;
+    bottom: -5px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    z-index: -1;
+}
+    </style>
+</head>
+<body class="font-inter bg-gray-50">
+    <!-- 添加与Popular Attractions页面相同的P标签来匹配偏移 -->
+    <p>这是布局 P 标签的内容</p>
+    
+    <!-- Navigation - 完全统一的导航栏，与Popular Attractions和Contact Us页面一致 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <i class="fa fa-paper-plane text-white text-lg"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">Travel NZ</span>
+                </div>
+                
+                <!-- Desktop menu - 移除所有CSS类，与其他页面保持一致 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="Home.html">Home</a> <a href="Popular Attractions.html">Popular Attractions</a> <a href="Contact Us.html">Contact Us</a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-6 space-y-4">
+                <a href="Home.html" class="block text-primary font-medium">Home</a>
+                <a href="Popular Attractions.html" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Popular Attractions</a>
+                <a href="Contact Us.html" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <!-- 幻灯片背景 -->
+        <div class="slideshow-container">
+            <!-- 幻灯片1 -->
+            <div class="slide active" style="background-image: url('首页1.png');"></div>
+            
+            <!-- 幻灯片2 -->
+            <div class="slide" style="background-image: url('首页2.png');"></div>
+            
+            <!-- 幻灯片3 -->
+            <div class="slide" style="background-image: url('首页3.png');"></div>
+            
+            <!-- 幻灯片4 -->
+            <div class="slide" style="background-image: url('首页4.png');"></div>
+            
+            <!-- 幻灯片5 -->
+            <div class="slide" style="background-image: url('首页5.jpg');"></div>
+            
+            <!-- 进度条 -->
+            <div class="progress-bar active">
+                <div class="progress"></div>
+            </div>
+            
+            <!-- 缩略图导航 -->
+            <div class="thumbnails">
+                <div class="thumbnail active" data-index="0">
+                    <img src="首页1.png" alt="Slide 1">
+                </div>
+                <div class="thumbnail" data-index="1">
+                    <img src="首页2.png" alt="Slide 2">
+                </div>
+                <div class="thumbnail" data-index="2">
+                    <img src="首页3.png" alt="Slide 3">
+                </div>
+                <div class="thumbnail" data-index="3">
+                    <img src="首页4.png" alt="Slide 4">
+                </div>
+                <div class="thumbnail" data-index="4">
+                    <img src="首页5.jpg" alt="Slide 5">
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="hero-content text-white">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in">
+                Your NZ Story Awaits
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in">
+                Write Your Adventure in the Book of Nature
+            </p>
+            
+        </div>
+    </section>
+
+    <!-- Explore New Zealand Map -->
+    <section id="map" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    Explore New Zealand
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Click on the markers to explore popular attractions across New Zealand's North and South Islands
+                </p>
+            </div>
+            
+            <div class="nz-map">
+                <img src="https://aka.doubaocdn.com/s/3Vpb1vRnxk?alice_filename=9142d6eb1919b013a064c75832921b9b_720.png" alt="New Zealand Map" class="w-full rounded-2xl shadow-lg">
+
+                <!-- North Island city markers -->
+                <div class="map-point north" style="top: 6%; left: 55%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=bay-of-islands'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Bay of Islands - North Island
+                    </div>
+                </div>
+
+                <div class="map-point north" style="top: 19%; left: 63%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=auckland'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Auckland - North Island
+                    </div>
+                </div>
+
+                <div class="map-point north" style="top: 25%; left: 62%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=hamilton'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Hamilton - North Island
+                    </div>
+                </div>
+
+                <div class="map-point north" style="top: 30%; left: 70%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=rotorua'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Rotorua - North Island
+                    </div>
+                </div>
+
+                <div class="map-point north" style="top: 32%; left: 68%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=taupo'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Taupo - North Island
+                    </div>
+                </div>
+
+                <div class="map-point north" style="top: 48%; left: 65%;" onclick="window.location.href='Popular Attractions.html?island=north&attraction=wellington'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Wellington - North Island
+                    </div>
+                </div>
+
+                <!-- South Island city markers -->
+                <div class="map-point south" style="top: 52%; left: 52%;" onclick="window.location.href='Popular Attractions.html?island=south&attraction=nelson'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Nelson - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 58%; left: 40%;" onclick="window.location.href='Popular Attractions.html?island=south'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Greymouth - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 58%; left: 53%;" onclick="window.location.href='Popular Attractions.html?island=south&attraction=kaikoura'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Kaikoura - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 70%; left: 38%;" onclick="window.location.href='Popular Attractions.html?island=south&attraction=tekapo'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Tekapo - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 68%; left: 48%;" onclick="window.location.href='Popular Attractions.html?island=south&attraction=christchurch'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Christchurch - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 78%; left: 25%;" onclick="window.location.href='Popular Attractions.html?island=south&attraction=queenstown'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Queenstown - South Island
+                    </div>
+                </div>
+
+                <div class="map-point south" style="top: 83%; left: 37%;" onclick="window.location.href='Popular Attractions.html?island=south'">
+                    <div class="map-tooltip" style="bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;">
+                        Dunedin - South Island
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fa fa-paper-plane text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold">Travel NZ</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Professional New Zealand travel service provider, creating unforgettable pure journeys for you.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="Home.html" class="text-gray-400 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="Popular Attractions.html" class="text-gray-400 hover:text-white transition-colors duration-300">Popular Attractions</a></li>
+                        <li><a href="Contact Us.html" class="text-gray-400 hover:text-white transition-colors duration-300">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Popular Destinations -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Popular Destinations</h4>
+                    <ul class="space-y-3">
+                        <li><a href="Popular Attractions.html?island=north&attraction=auckland" class="text-gray-400 hover:text-white transition-colors duration-300">Auckland</a></li>
+                        <li><a href="Popular Attractions.html?island=south&attraction=queenstown" class="text-gray-400 hover:text-white transition-colors duration-300">Queenstown</a></li>
+                        <li><a href="Popular Attractions.html?island=north&attraction=rotorua" class="text-gray-400 hover:text-white transition-colors duration-300">Rotorua</a></li>
+                        <li><a href="Popular Attractions.html?island=south&attraction=milford-sound" class="text-gray-400 hover:text-white transition-colors duration-300">Milford Sound</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Contact Us</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-3"></i>
+                            info@travelnz.com
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone mr-3"></i>
+                            +86 400-888-8888
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-clock-o mr-3"></i>
+                            9:00-18:00 (Weekdays)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Travel NZ. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-gradient-to-br from-primary to-secondary text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 opacity-0 pointer-events-none">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 幻灯片功能 - 修复版
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDuration = 2000; // 2秒切换
+            
+            // 初始化幻灯片
+            function initSlideshow() {
+                // 设置第一张幻灯片为活动状态
+                showSlide(currentSlide);
+                
+                // 开始自动播放
+                startSlideShow();
+                
+                // 缩略图点击事件
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        goToSlide(index);
+                        // 点击后重新开始自动播放
+                        startSlideShow();
+                    });
+                });
+                
+                // 鼠标悬停时暂停自动播放
+                const slideshowContainer = document.querySelector('.slideshow-container');
+                slideshowContainer.addEventListener('mouseenter', pauseSlideShow);
+                slideshowContainer.addEventListener('mouseleave', startSlideShow);
+            }
+            
+            // 显示指定索引的幻灯片
+            function showSlide(index) {
+                // 隐藏所有幻灯片
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // 移除所有缩略图的活动状态
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.classList.remove('active');
+                });
+                
+                // 显示当前幻灯片
+                slides[index].classList.add('active');
+                thumbnails[index].classList.add('active');
+                
+                // 重置进度条
+                progress.style.width = '0%';
+                progressBar.classList.remove('active');
+                void progressBar.offsetWidth; // 触发重绘
+                progressBar.classList.add('active');
+                
+                // 更新当前幻灯片索引
+                currentSlide = index;
+            }
+            
+            // 下一张幻灯片
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+            
+            // 跳转到指定幻灯片
+            function goToSlide(index) {
+                showSlide(index);
+            }
+            
+            // 开始自动播放
+            function startSlideShow() {
+                clearInterval(slideInterval); // 清除之前的定时器
+                slideInterval = setInterval(nextSlide, slideDuration);
+            }
+            
+            // 暂停自动播放
+            function pauseSlideShow() {
+                clearInterval(slideInterval);
+                progressBar.classList.remove('active');
+            }
+            
+            // 初始化幻灯片
+            initSlideshow();
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('back-to-top');
+            
+            if (window.scrollY > 100) {
+                navbar.classList.add('nav-blur');
+                backToTop.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                navbar.classList.remove('nav-blur');
+                backToTop.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // Back to top functionality
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animate map points
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapPoints = document.querySelectorAll('.map-point');
+            
+            setTimeout(() => {
+                mapPoints.forEach((point, index) => {
+                    setTimeout(() => {
+                        point.style.opacity = '1';
+                        point.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }, index * 100);
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

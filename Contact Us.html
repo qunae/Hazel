@@ -1,0 +1,658 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Travel NZ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF',
+                        secondary: '#059669',
+                        accent: '#3B82F6'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-text {
+                background: linear-gradient(135deg, #1E40AF, #059669);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1E40AF, #059669);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1E40AF;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <i class="fa fa-paper-plane text-white text-lg"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">Travel NZ</span>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                <a href="Home.html">Home</a> <a href="Popular Attractions.html">Popular Attractions</a> <a href="Contact Us.html">Contact Us</a> </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-6 space-y-4">
+                <a href="https://p6-flow-sign.byteimg.com/tos-cn-i-ik7evvg4ik/rc/pc/super_tool/872d8a28c5c543e6afcaabe36d1d28c7.html?rcl=202511062332452B8F51E45465BF498590&rk3s=8e244e95&rrcfp=f512b60b&x-expires=1763740090&x-signature=zDxChe0C7iwf8DKCEgZja0bfZJQ%3D#home" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Home</a>
+                <a href="https://p3-flow-sign.byteimg.com/tos-cn-i-ik7evvg4ik/rc/pc/super_tool/ee5f5ddd0921456dab42d4e54857d45a.html?rcl=202511062332452B8F51E45465BF498590&rk3s=8e244e95&rrcfp=f512b60b&x-expires=1763740090&x-signature=rFkVtH6WB0g9zi4zT6HUh4Lv%2FaA%3D" class="block text-gray-700 hover:text-primary transition-colors duration-300 font-medium">Popular Attractions</a>
+                <a href="https://p3-flow-sign.byteimg.com/tos-cn-i-ik7evvg4ik/rc/pc/super_tool/8fb05112cd864547b7ab6b90c9cf158b.html?rcl=202511062332452B8F51E45465BF498590&rk3s=8e244e95&rrcfp=f512b60b&x-expires=1763740091&x-signature=yauVOiSmZ3NKSUXoRUM6M9hl4YA%3D" class="block text-primary font-medium">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Title Section -->
+    <section class="relative pt-24 pb-16 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 section-fade-in">
+                Contact Us
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto section-fade-in">
+                Professional New Zealand travel consultants provide personalized services for you
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Information -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Contact Methods -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8 section-fade-in">Contact Methods</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start card-hover p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fa fa-phone text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Phone Consultation</h3>
+                                <p class="text-gray-600">+86 400-888-8888</p>
+                                <p class="text-sm text-gray-500">9:00-18:00 (Weekdays)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start card-hover p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fa fa-envelope text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Email Contact</h3>
+                                <p class="text-gray-600">info@travelnz.com</p>
+                                <p class="text-sm text-gray-500">Reply within 24 hours</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start card-hover p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fa fa-wechat text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">WeChat Consultation</h3>
+                                <p class="text-gray-600">TravelNZ2025</p>
+                                <p class="text-sm text-gray-500">Scan QR code to add personal consultant</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start card-hover p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fa fa-map-marker text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Company Address</h3>
+                                <p class="text-gray-600">Jingchu University of Technology, 33 Xiangshan Avenue, Jingmen City, Hubei Province</p>
+                                <p class="text-sm text-gray-500">欢迎来访</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8 section-fade-in">Send Inquiry</h2>
+                    
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                                <input type="text" id="name" name="name" required
+                                       class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                            </div>
+                            
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required
+                                       class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" id="email" name="email" required
+                                   class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                        </div>
+                        
+                        <div>
+                            <label for="travel-type" class="block text-sm font-medium text-gray-700 mb-2">Travel Type</label>
+                            <select id="travel-type" name="travel-type"
+                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                                <option value="">Please select travel type</option>
+                                <option value="family">Family Travel</option>
+                                <option value="couple">Couple Travel</option>
+                                <option value="friends">Friends Gathering</option>
+                                <option value="business">Business Trip</option>
+                                <option value="solo">Solo Travel</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="travel-date" class="block text-sm font-medium text-gray-700 mb-2">Travel Date</label>
+                                <input type="date" id="travel-date" name="travel-date"
+                                       class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                            </div>
+                            
+                            <div>
+                                <label for="travel-days" class="block text-sm font-medium text-gray-700 mb-2">Travel Days</label>
+                                <select id="travel-days" name="travel-days"
+                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                                    <option value="">Please select days</option>
+                                    <option value="5-7">5-7 days</option>
+                                    <option value="8-10">8-10 days</option>
+                                    <option value="11-15">11-15 days</option>
+                                    <option value="16-20">16-20 days</option>
+                                    <option value="20+">More than 20 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Detailed Requirements *</label>
+                            <textarea id="message" name="message" rows="5" required
+                                      class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 resize-none"></textarea>
+                            <p class="text-xs text-gray-500 mt-1">Please describe your travel needs and special requirements in detail</p>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="agreement" name="agreement" required
+                                   class="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <label for="agreement" class="ml-2 text-sm text-gray-600">
+                                I agree to receive travel-related information and service notifications
+                            </label>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="btn-primary w-full text-white py-4 px-6 rounded-lg text-lg font-semibold hover:scale-105 transition-transform duration-300">
+                            <i class="fa fa-paper-plane mr-2"></i>
+                            Submit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Features -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 section-fade-in">
+                    Our Service Features
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto section-fade-in">
+                    Professional, reliable, and personalized travel services
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="service-card bg-white rounded-2xl p-8 text-center shadow-lg">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-map text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Customized Itineraries</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Personalized travel plans tailored to your preferences and budget
+                    </p>
+                </div>
+                
+                <div class="service-card bg-white rounded-2xl p-8 text-center shadow-lg">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-shield text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">24/7 Support</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Round-the-clock customer service during your trip
+                    </p>
+                </div>
+                
+                <div class="service-card bg-white rounded-2xl p-8 text-center shadow-lg">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-tag text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Competitive Prices</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Exclusive discounts and the best price guarantees
+                    </p>
+                </div>
+                
+                <div class="service-card bg-white rounded-2xl p-8 text-center shadow-lg">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Professional Guides</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Experienced local guides with deep knowledge
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Testimonials -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 section-fade-in">
+                    Customer Testimonials
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto section-fade-in">
+                    What our customers say about our services
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 rounded-2xl p-8 card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">Li&nbsp;</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-900">Miss Li&nbsp;</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        "The customized itinerary was perfect! Our family had an amazing time in New Zealand. The service was professional and attentive."
+                    </p>
+                    <p class="text-sm text-gray-500">Family Trip • 12 days</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-2xl p-8 card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">Wang&nbsp;</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-900">Mr.Wang&nbsp;</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        "Great service from start to finish. The guide was very knowledgeable and made our trip unforgettable. Highly recommended!"
+                    </p>
+                    <p class="text-sm text-gray-500">Couple Travel • 8 days</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-2xl p-8 card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">Zhang&nbsp;</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-900">Miss Zhang&nbsp;</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        "As a solo traveler, I felt safe and well taken care of. The booking process was easy and the support team was always available."
+                    </p>
+                    <p class="text-sm text-gray-500">Solo Travel • 15 days</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 section-fade-in">
+                    Frequently Asked Questions
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto section-fade-in">
+                    Answers to common questions about New Zealand travel
+                </p>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl p-6 card-hover">
+                    <button class="faq-toggle w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                        <span>What is the best time to visit New Zealand?</span>
+                        <i class="fa fa-chevron-down text-primary transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden mt-4 text-gray-600">
+                        <p>The best time to visit New Zealand is during spring (September-November) and autumn (March-May) when the weather is mild and crowds are smaller. Summer (December-February) is peak season with warmer weather but more tourists.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 card-hover">
+                    <button class="faq-toggle w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                        <span>Do I need a visa to travel to New Zealand?</span>
+                        <i class="fa fa-chevron-down text-primary transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden mt-4 text-gray-600">
+                        <p>Chinese citizens need a visa to enter New Zealand. You can apply for a visitor visa online through the New Zealand Immigration website. Processing times vary, so apply well in advance.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 card-hover">
+                    <button class="faq-toggle w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                        <span>What currency is used in New Zealand?</span>
+                        <i class="fa fa-chevron-down text-primary transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden mt-4 text-gray-600">
+                        <p>New Zealand uses the New Zealand Dollar (NZD). Credit cards are widely accepted, and ATMs are readily available throughout the country.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 card-hover">
+                    <button class="faq-toggle w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                        <span>Is English widely spoken in New Zealand?</span>
+                        <i class="fa fa-chevron-down text-primary transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden mt-4 text-gray-600">
+                        <p>Yes, English is the primary language spoken in New Zealand. Maori is also an official language but is less commonly used in everyday conversation.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 card-hover">
+                    <button class="faq-toggle w-full flex justify-between items-center text-left font-semibold text-gray-900">
+                        <span>What is the transportation like in New Zealand?</span>
+                        <i class="fa fa-chevron-down text-primary transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden mt-4 text-gray-600">
+                        <p>Self-driving is popular in New Zealand with well-maintained roads. There is also an extensive bus network and domestic flights connecting major cities. Trains offer scenic journeys but are less frequent.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fa fa-paper-plane text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold">Travel NZ</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Professional New Zealand travel service provider, creating unforgettable pure journeys for you.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+              <div>
+                <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+                  <ul class="space-y-3">
+                      <li><a href="Home.html">Home</a></li>
+                      <li><a href="Popular Attractions.html">Popular Attractions</a></li>
+                      <li><a href="Contact Us.html">Contact Us</a></li>
+                  </ul>
+                </div>
+                
+                <!-- Popular Destinations -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Popular Destinations</h4>
+                    <ul class="space-y-3">
+                        <li><a href="Popular Attractions.html#auckland">Auckland</a></li>
+                        <li><a href="Popular Attractions.html#queenstown">Queenstown</a></li>
+                        <li><a href="Popular Attractions.html#rotorua">Rotorua</a></li>
+                        <li><a href="Popular Attractions.html#milford-sound">Milford So</a><a>und</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Contact Us</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-3"></i>
+                            info@travelnz.com
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone mr-3"></i>
+                            +86 400-888-8888
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-clock-o mr-3"></i>
+                            9:00-18:00 (Weekdays)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Travel NZ. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-gradient-to-br from-primary to-secondary text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 opacity-0 pointer-events-none">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('back-to-top');
+            
+            if (window.scrollY > 100) {
+                navbar.classList.add('nav-blur');
+                backToTop.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                navbar.classList.remove('nav-blur');
+                backToTop.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // Back to top functionality
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+                
+                // Close other FAQs
+                document.querySelectorAll('.faq-toggle').forEach(otherToggle => {
+                    if (otherToggle !== this) {
+                        const otherContent = otherToggle.nextElementSibling;
+                        const otherIcon = otherToggle.querySelector('i');
+                        
+                        if (!otherContent.classList.contains('hidden')) {
+                            otherContent.classList.add('hidden');
+                            otherIcon.classList.remove('rotate-180');
+                        }
+                    }
+                });
+            });
+        });
+
+        // Contact form submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            alert('Thank you for your inquiry! Our team will contact you within 24 hours.');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.1s';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with section-fade-in class
+        document.querySelectorAll('.section-fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+<body>
+</body>
+</html>
